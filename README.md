@@ -1,18 +1,16 @@
 # DeadviewLiveRenderHooks
 
-To start your Phoenix server:
+## What is this?
 
-  * Install dependencies with `mix deps.get`
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+This is an example repository that demonstrates an issue where deadview `phx-hook`s don’t run when a liveview is `live_render`ed on the page.
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+## How to repro
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+This repository uses two hooks, `HelloDeadView` and `HelloLiveView`. They each write a message to the browser console.
 
-## Learn more
+1. To repro the issue where a deadview hook is not executed, run `mix phx.server` and open a browser to [http://localhost:4000](http://localhost:4000). You’ll only see "Hello live view" in the browser console.
+2. To observe that the deadview hook _does_ run when `live_render` is not called, remove the `live_render` in [index.html.heex](lib/deadview_live_render_hooks_web/templates/page/index.html.heex). The browser console should now show "Hello dead view".
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+## Expectation
+
+The LiveView 0.18 [changelog](https://hexdocs.pm/phoenix_live_view/0.18.0/changelog.html#0-18-0-2022-09-20) included the enhancement "Add dead view support for hooks". I’d expect that this support would still work on a hybrid page that embeds a rendered LiveView but is otherwise dead.
